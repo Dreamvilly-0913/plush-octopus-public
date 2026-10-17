@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plush Octopus</title>
+    <meta name="description" content="Material Studies No. 072 — an interactive soft-body plush octopus." />
+  </head>
+  <body>
+    <canvas id="scene" aria-label="Plush octopus simulation"></canvas>
+
+    <div class="ui">
+      <header class="masthead">
+        <div class="eyebrow">Material Studies / No. 072</div>
+        <h1 class="title"><span class="l1">Plush</span><span class="l2">Octopus.</span></h1>
+        <p class="blurb">Eight soft arms in a coat of minky.<br />Floppy, clingy, heavy in the head.<br />Offer it a finger.</p>
+      </header>
+
+      <div class="badge" id="badge"><i class="dot"></i><span id="badge-text">WebGL2 · Live</span></div>
+
+      <aside class="panel" aria-label="Specimen controls">
+        <div class="panel-head">
+          <span>The Specimen</span>
+          <span class="glyphs" aria-hidden="true"><span class="no">№</span><i class="box"></i></span>
+        </div>
+
+        <div class="group g-tool">
+          <div class="label">Tool</div>
+          <div class="seg" role="radiogroup" aria-label="Tool">
+            <button class="tool is-active" data-tool="hand" role="radio" aria-checked="true">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.2 8.6V3.9a.9.9 0 0 1 1.8 0v3.6M7 7.4V2.9a.9.9 0 0 1 1.8 0v4.5M8.8 7.4V3.6a.9.9 0 0 1 1.8 0v4.3M10.6 8V5.3a.9.9 0 0 1 1.8 0v4.4c0 2.5-1.6 4.3-4 4.3-1.7 0-2.6-.8-3.5-2.1L3.4 9.4a.95.95 0 0 1 1.5-1.1l.3.4"/></svg>
+              <span>Hand</span>
+            </button>
+            <button class="tool" data-tool="finger" role="radio" aria-checked="false">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.3 8.2V2.6a1 1 0 0 1 2 0v5M8.3 7.4a1 1 0 0 1 2 0v.6m0-.2a1 1 0 0 1 2 0v2c0 2.4-1.6 4.2-3.9 4.2-1.6 0-2.5-.7-3.3-1.9L3.6 10a1 1 0 0 1 1.6-1.2l1.1 1.3"/></svg>
+              <span>Finger</span>
+            </button>
+            <button class="tool" data-tool="comb" role="radio" aria-checked="false">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6.2h12v2.3H2zM3.4 8.5v4M5.3 8.5v4M7.2 8.5v4M9.1 8.5v4M11 8.5v4M12.9 8.5v4"/></svg>
+              <span>Comb</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="group g-fur">
+          <div class="label">Fur</div>
+          <div class="swatches" role="radiogroup" aria-label="Fur colour">
+            <button class="swatch is-active" data-fur="coral" role="radio" aria-checked="true">
+              <i class="chip" style="--top:#d9735a;--bot:#f8d9cb"></i><span>Coral</span>
+            </button>
+            <button class="swatch" data-fur="lilac" role="radio" aria-checked="false">
+              <i class="chip" style="--top:#8e7fd0;--bot:#ece6fa"></i><span>Lilac</span>
+            </button>
+            <button class="swatch" data-fur="lagoon" role="radio" aria-checked="false">
+              <i class="chip" style="--top:#479b93;--bot:#d9f2ee"></i><span>Lagoon</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="group sliders">
+          <label class="slider">
+            <span class="srow"><span class="label">Stuffing</span><output id="v-stuffing">0.42</output></span>
+            <input type="range" id="stuffing" min="0" max="1" step="0.01" value="0.42" />
+            <span class="ends"><em>soft</em><em>packed</em></span>
+          </label>
+          <label class="slider">
+            <span class="srow"><span class="label">Pile</span><output id="v-pile">7 mm</output></span>
+            <input type="range" id="pile" min="2" max="14" step="1" value="7" />
+            <span class="ends"><em>cropped</em><em>shaggy</em></span>
+          </label>
+          <label class="slider">
+            <span class="srow"><span class="label">Internal damping</span><output id="v-damping">0.48</output></span>
+            <input type="range" id="damping" min="0" max="1" step="0.01" value="0.48" />
+            <span class="ends"><em>bouncy</em><em>lazy</em></span>
+          </label>
+        </div>
+
+        <div class="group actions">
+          <button class="btn wide" data-action="shake">Shake it</button>
+          <button class="btn" data-action="squish">Squish</button>
+          <button class="btn" data-action="toss">Toss</button>
+          <button class="btn" data-action="smooth">Smooth fur</button>
+          <button class="btn" data-action="reset">Reset</button>
+        </div>
+
+        <div class="opts">
+          <label class="check"><input type="checkbox" id="slowmo" /><span>¼ speed</span></label>
+          <label class="check"><input type="checkbox" id="mesh" /><span>Mesh</span></label>
+          <button class="btn small" id="pause">Pause</button>
+        </div>
+      </aside>
+
+      <footer class="notes">
+        <p class="howto" id="howto"></p>
+        <div class="stats">
+          <div class="stat"><span class="k">Mass</span><span class="v"><b>480</b><small>g</small></span></div>
+          <div class="stat"><span class="k">Volume</span><span class="v"><b id="s-volume">100.0</b><small>% of rest</small></span></div>
+          <div class="stat"><span class="k">Kinetic</span><span class="v"><b id="s-kinetic">0.00</b><small>mJ</small></span></div>
+          <div class="stat"><span class="k">Holding on</span><span class="v"><b id="s-holding">0</b><small id="s-holding-unit">arms</small></span></div>
+        </div>
+        <p class="footnote">Illustrative scale: 1 sim unit = 10 cm (an octopus 26 cm tip to tip), stuffed like a minky shell at 0.05 g/cm³. Volume and energy are summed live from the stuffing cluster and the rod particles.</p>
+      </footer>
+
+      <details class="inside">
+        <summary><span>Inside the experiment</span><i class="caret" aria-hidden="true"></i></summary>
+        <div class="inside-body">
+          <p><b>Stuffing.</b> The head is a shape-matched cluster of 43 particles; each substep it is pulled back toward its rest shape by the <em>stuffing</em> amount, and its volume is read from the fitted deformation.</p>
+          <p><b>Arms.</b> Eight Cosserat rods of 15 segments. Stretch–shear and bend–twist constraints hold a rest curl at every tip, so they hang, stretch and roll like stitched fabric tubes.</p>
+          <p><b>Fur.</b> Shell-rendered pile. Comb strokes are painted into a nap map that leans the fibres; against the grain the pile stands and darkens.</p>
+          <p><b>Step.</b> 10 substeps per frame, position-based. Floor friction, self-contact and finger contact are resolved inside every substep.</p>
+        </div>
+      </details>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
